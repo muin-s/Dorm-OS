@@ -70,7 +70,6 @@ import { Textarea } from "@/components/ui/textarea";
 // Analytics component (from the canvas code)
 import AdminAnalytics from "@/components/AdminAnalytics";
 
-const API_BASE = "http://localhost:5000";
 
 const AdminDashboard = () => {
   const [workerFormOpen, setWorkerFormOpen] = useState(false);
@@ -167,7 +166,7 @@ const AdminDashboard = () => {
     newStatus: Issue["status"]
   ) => {
     try {
-      const res = await fetch(`${API_BASE}/api/issues/${issueId}/status`, {
+      const res = await fetch(`/api/issues/${issueId}/status`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -194,7 +193,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("access_token");
 
-      const res = await fetch(`${API_BASE}/api/issues/${issueId}/assign`, {
+      const res = await fetch(`/api/issues/${issueId}/assign`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -269,7 +268,7 @@ const AdminDashboard = () => {
   // 🔹 Fetch workers
   const fetchWorkers = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/workers`, {
+      const res = await fetch(`/api/workers`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -460,7 +459,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div style={{backgroundImage:"url(/hostel1.jpg)",backgroundSize:"cover",backgroundPosition:"center",backgroundAttachment:"fixed"}} className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <header className="border-b bg-white dark:bg-gray-800 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -657,7 +656,7 @@ const AdminDashboard = () => {
                                         if (!confirm("Unassign this worker?")) return;
 
                                         try {
-                                          const res = await fetch(`${API_BASE}/api/issues/${issue.id}/unassign`, {
+                                          const res = await fetch(`/api/issues/${issue.id}/unassign`, {
                                             method: "POST",
                                             headers: {
                                               "Content-Type": "application/json",

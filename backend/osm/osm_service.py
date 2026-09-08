@@ -34,7 +34,15 @@ def fetch_nearby_places():
     """
 
     try:
-        res = requests.post(OVERPASS_URL, data=query, timeout=30)
+        res = requests.post(
+            OVERPASS_URL,
+            data=query.encode("utf-8"),
+            timeout=30,
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "User-Agent": "DormOS-IIITN/1.0"
+            }
+        )
         res.raise_for_status()
         data = res.json()
     except Exception as e:

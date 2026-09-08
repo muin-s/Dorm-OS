@@ -40,7 +40,7 @@ CATEGORY_KEYWORDS = {
         "notes", "record", "journal",
         "exam", "gate", "jee", "neet", "upsc",
         "novel", "magazine",
-        "notebook", "register", "file","coding","DSA",
+        "notebook", "register", "file", "coding", "dsa",
         "pen", "pencil", "calculator"
     ],
 }
@@ -54,5 +54,5 @@ def detect_category_from_query(query: str):
     return None
 
 
-def is_pure_category_query(query, category):
+def is_pure_category_query(query: str, category: str):
     return query.strip().lower() == category

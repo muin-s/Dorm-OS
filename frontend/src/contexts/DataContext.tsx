@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { toast } from "sonner";
 import { useAuth } from "./AuthContext";
 
-const API_BASE = "http://localhost:5000";
 
 export interface Category {
   id: string;
@@ -141,13 +140,13 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       doctorsRes,
       studentRecordsRes,
     ] = await Promise.all([
-      safeFetch(`${API_BASE}/api/issues`, { headers }),
-      safeFetch(`${API_BASE}/api/categories`, { headers }),
-      safeFetch(`${API_BASE}/api/notices`, { headers }),
-      safeFetch(`${API_BASE}/api/workers`, { headers }),
-      safeFetch(`${API_BASE}/api/mess`, { headers }),
-      safeFetch(`${API_BASE}/api/medical/doctors`, { headers }),
-      safeFetch(`${API_BASE}/api/medical/student-records`, { headers }), // Corrected URL
+      safeFetch(`/api/issues`, { headers }),
+      safeFetch(`/api/categories`, { headers }),
+      safeFetch(`/api/notices`, { headers }),
+      safeFetch(`/api/workers`, { headers }),
+      safeFetch(`/api/mess`, { headers }),
+      safeFetch(`/api/medical/doctors`, { headers }),
+      safeFetch(`/api/medical/student-records`, { headers }), // Corrected URL
     ]);
       // handle auth errors centrally
       const responses = [issuesRes, categoriesRes, noticesRes, workersRes, messRes, doctorsRes, studentRecordsRes];
@@ -242,7 +241,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Issue Operations
   const addIssue = async (issueData: any) => {
     try {
-      const res = await fetch(`${API_BASE}/api/issues`, {
+      const res = await fetch(`/api/issues`, {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -276,7 +275,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   
   const editIssue = async (issueId: number, updates: Partial<Issue>) => {
   try {
-    const res = await fetch(`${API_BASE}/api/issues/${issueId}`, {
+    const res = await fetch(`/api/issues/${issueId}`, {
       method: "PUT",
       headers,
       body: JSON.stringify({
@@ -301,7 +300,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 };
   const updateIssue = async (issueId: number, updates: Partial<Issue>) => {
     try {
-      const res = await fetch(`${API_BASE}/api/issues/${issueId}/status`, {
+      const res = await fetch(`/api/issues/${issueId}/status`, {
         method: "POST",
         headers,
         body: JSON.stringify(updates),
@@ -316,7 +315,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const deleteIssue = async (issueId: number) => {
     try {
-      const res = await fetch(`${API_BASE}/api/issues/${issueId}`, {
+      const res = await fetch(`/api/issues/${issueId}`, {
         method: "DELETE",
         headers,
       });
@@ -349,7 +348,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/api/issues/${issueId}/upvote`, {
+      const res = await fetch(`/api/issues/${issueId}/upvote`, {
         method: "POST",
         headers,
         body: JSON.stringify({ userId: user.id }),
@@ -368,7 +367,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/api/issues/${issueId}/downvote`, {
+      const res = await fetch(`/api/issues/${issueId}/downvote`, {
         method: "POST",
         headers,
         body: JSON.stringify({ userId: user.id }),
@@ -384,7 +383,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Notice Operations
   const addNotice = async (noticeData: any) => {
     try {
-      const res = await fetch(`${API_BASE}/api/notices`, {
+      const res = await fetch(`/api/notices`, {
         method: "POST",
         headers,
         body: JSON.stringify(noticeData),
@@ -401,7 +400,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // add to DataContext.tsx inside DataProvider
 const updateNotice = async (noticeId: number, updates: Partial<Notice>) => {
   try {
-    const res = await fetch(`${API_BASE}/api/notices/${noticeId}`, {
+    const res = await fetch(`/api/notices/${noticeId}`, {
       method: "PUT", // or "PATCH" if your backend expects PATCH
       headers,
       body: JSON.stringify(updates),
@@ -423,7 +422,7 @@ const updateNotice = async (noticeId: number, updates: Partial<Notice>) => {
 
   const deleteNotice = async (noticeId: number) => {
     try {
-      const res = await fetch(`${API_BASE}/api/notices/${noticeId}`, {
+      const res = await fetch(`/api/notices/${noticeId}`, {
         method: "DELETE",
         headers,
       });
@@ -451,7 +450,7 @@ const updateNotice = async (noticeId: number, updates: Partial<Notice>) => {
   // Mess Operations
   const addMessItem = async (messData: any) => {
     try {
-      const res = await fetch(`${API_BASE}/api/mess`, {
+      const res = await fetch(`/api/mess`, {
         method: "POST",
         headers,
         body: JSON.stringify(messData),
@@ -466,7 +465,7 @@ const updateNotice = async (noticeId: number, updates: Partial<Notice>) => {
 
   const updateMessItem = async (messId: number, updates: Partial<MessItem>) => {
     try {
-      const res = await fetch(`${API_BASE}/api/mess/${messId}`, {
+      const res = await fetch(`/api/mess/${messId}`, {
         method: "PUT",
         headers,
         body: JSON.stringify(updates),
@@ -481,7 +480,7 @@ const updateNotice = async (noticeId: number, updates: Partial<Notice>) => {
 
   const deleteMessItem = async (messId: number) => {
     try {
-      const res = await fetch(`${API_BASE}/api/mess/${messId}`, {
+      const res = await fetch(`/api/mess/${messId}`, {
         method: "DELETE",
         headers,
       });
@@ -511,7 +510,7 @@ const updateNotice = async (noticeId: number, updates: Partial<Notice>) => {
 // Doctors (medical)
 const addDoctor = async (payload: Partial<Doctor>) => {
   try {
-    const res = await fetch(`${API_BASE}/api/medical/doctors`, {
+    const res = await fetch(`/api/medical/doctors`, {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -540,7 +539,7 @@ const addDoctor = async (payload: Partial<Doctor>) => {
 
 const updateDoctor = async (doctorId: number, updates: Partial<Doctor>) => {
   try {
-    const res = await fetch(`${API_BASE}/api/medical/doctors/${doctorId}`, {
+    const res = await fetch(`/api/medical/doctors/${doctorId}`, {
       method: "PUT",
       headers,
       body: JSON.stringify({
@@ -568,7 +567,7 @@ const updateDoctor = async (doctorId: number, updates: Partial<Doctor>) => {
 };
  const deleteDoctor = async (doctorId: number) => {
   try {
-    const res = await fetch(`${API_BASE}/api/medical/doctors/${doctorId}`, {
+    const res = await fetch(`/api/medical/doctors/${doctorId}`, {
       method: "DELETE",
       headers,
     });
@@ -594,7 +593,7 @@ const updateDoctor = async (doctorId: number, updates: Partial<Doctor>) => {
 // Student Records (admin-only)
 const addStudentRecord = async (payload: Partial<StudentRecord>) => {
   try {
-    const res = await fetch(`${API_BASE}/api/medical/student-records`, { // Corrected URL
+    const res = await fetch(`/api/medical/student-records`, { // Corrected URL
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -622,7 +621,7 @@ const addStudentRecord = async (payload: Partial<StudentRecord>) => {
 
 const updateStudentRecord = async (recordId: number, updates: Partial<StudentRecord>) => {
   try {
-    const res = await fetch(`${API_BASE}/api/medical/student-records/${recordId}`, { // Corrected URL
+    const res = await fetch(`/api/medical/student-records/${recordId}`, { // Corrected URL
       method: "PUT",
       headers,
       body: JSON.stringify({
@@ -649,7 +648,7 @@ const updateStudentRecord = async (recordId: number, updates: Partial<StudentRec
 };
  const deleteStudentRecord = async (recordId: number) => {
   try {
-    const res = await fetch(`${API_BASE}/api/medical/student-records/${recordId}`, {
+    const res = await fetch(`/api/medical/student-records/${recordId}`, {
       method: "DELETE",
       headers,
     });

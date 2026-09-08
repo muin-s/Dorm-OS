@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
-const API_BASE = "http://localhost:5000";
 
 interface MarketplaceItem {
     id: number;
@@ -44,7 +44,7 @@ const StudentMarketplace = () => {
     /* ---------------- LOAD DEFAULT ITEMS ---------------- */
     const loadItems = async () => {
         try {
-            const res = await fetch(`${API_BASE}/api/marketplace`, {
+            const res = await fetch(`/api/marketplace`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
@@ -67,7 +67,7 @@ const StudentMarketplace = () => {
             }
 
             try {
-                const res = await fetch(`${API_BASE}/api/autocomplete`, {
+                const res = await fetch(`/api/autocomplete`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -105,7 +105,7 @@ const StudentMarketplace = () => {
         setShops([]);
 
         try {
-            const res = await fetch(`${API_BASE}/api/marketplace/search`, {
+            const res = await fetch(`/api/marketplace/search`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -128,7 +128,7 @@ const StudentMarketplace = () => {
     const toggleStatus = async (itemId: number, status: string) => {
         const newStatus = status === "available" ? "sold" : "available";
 
-        const res = await fetch(`${API_BASE}/api/marketplace/${itemId}/status`, {
+        const res = await fetch(`/api/marketplace/${itemId}/status`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -150,7 +150,7 @@ const StudentMarketplace = () => {
         formData.append("contact", contact);
         if (image) formData.append("image", image);
 
-        const res = await fetch(`${API_BASE}/api/marketplace`, {
+        const res = await fetch(`/api/marketplace`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
             body: formData,
@@ -176,7 +176,7 @@ const StudentMarketplace = () => {
             <div className="relative">
                 <div className="flex gap-2">
                     <input
-                        className="border p-2 flex-1"
+                        className="border dark:border-gray-600 p-2 flex-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded"
                         placeholder="Search products or shops..."
                         value={query}
                         onChange={(e) => {
@@ -194,19 +194,19 @@ const StudentMarketplace = () => {
                     />
                     <button
                         onClick={searchMarketplace}
-                        className="bg-blue-600 text-white px-4 py-2"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
                     >
-                        {loading ? "Searching..." : "Search"}
+                        {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-1 inline" />Searching...</> : "Search"}
                     </button>
                 </div>
 
                 {showSuggestions && suggestions.length > 0 && (
 
-                    <ul className="absolute z-50 w-full bg-white border rounded shadow mt-1">
+                    <ul className="absolute z-50 w-full bg-white dark:bg-gray-800 dark:border-gray-600 border rounded shadow mt-1">
                         {suggestions.map((s, i) => (
                             <li
                                 key={i}
-                                className="p-2 hover:bg-blue-50 cursor-pointer text-sm"
+                                className="p-2 hover:bg-blue-50 dark:hover:bg-gray-700 dark:text-white cursor-pointer text-sm"
                                 onClick={() => {
                                     setQuery(s);
                                     setSuggestions([]);
@@ -230,10 +230,10 @@ const StudentMarketplace = () => {
             </button>
 
             {showSellForm && (
-                <div className="border p-4 rounded space-y-3 bg-gray-50">
-                    <input className="border p-2 w-full" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+                <div className="border dark:border-gray-600 p-4 rounded space-y-3 bg-gray-50 dark:bg-gray-800">
+                    <input className="border dark:border-gray-600 p-2 w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
                     <select
-                        className="border p-2 w-full"
+                        className="border dark:border-gray-600 p-2 w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                     >
@@ -244,28 +244,29 @@ const StudentMarketplace = () => {
                         <option value="books">Books</option>
                         <option value="others">Others</option>
                     </select>
-                    <input className="border p-2 w-full" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
-                    <input className="border p-2 w-full" placeholder="Contact / Room No." value={contact} onChange={(e) => setContact(e.target.value)} />
+                    <input className="border dark:border-gray-600 p-2 w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} />
+                    <input className="border dark:border-gray-600 p-2 w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded" placeholder="Contact / Room No." value={contact} onChange={(e) => setContact(e.target.value)} />
                     <input type="file" accept="image/png,image/jpeg" onChange={(e) => setImage(e.target.files?.[0] || null)} />
-                    <button className="bg-blue-600 text-white px-4 py-2" onClick={postItem}>Post Item</button>
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" onClick={postItem}>Post Item</button>
                 </div>
             )}
 
             {/* LISTINGS */}
             <div>
-                <h2 className="text-lg font-semibold">Marketplace Listings</h2>
+                <h2 className="text-lg font-semibold dark:text-white">Marketplace Listings</h2>
 
-                {items.length === 0 && !loading && <p className="text-sm text-gray-500">No listings found</p>}
+                {loading && <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mt-2"><Loader2 className="h-4 w-4 animate-spin" />Searching marketplace...</div>}
+            {items.length === 0 && !loading && <p className="text-sm text-gray-500 dark:text-gray-400">No listings found</p>}
 
                 <ul className="space-y-4 mt-3">
                     {items.map((item) => (
-                        <li key={item.id} className="border p-4 rounded space-y-1">
+                        <li key={item.id} className="border dark:border-gray-600 p-4 rounded space-y-1 bg-white dark:bg-gray-800 dark:text-white">
                             <p className="font-medium">{item.description}</p>
                             {item.price && <p className="text-sm">₹ {item.price}</p>}
                             {item.contact_info && <p className="text-sm">📞 {item.contact_info}</p>}
                             {item.image_url && (
                                 <img
-                                    src={`${API_BASE}${item.image_url}`}
+                                    src={item.image_url}
                                     className="w-40 rounded mt-2"
                                 />
                             )}
@@ -279,7 +280,7 @@ const StudentMarketplace = () => {
                                     {item.status}
                                 </button>
                             ) : (
-                                <span className="text-sm text-gray-600">Status: {item.status}</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">Status: {item.status}</span>
                             )}
                         </li>
                     ))}
@@ -289,10 +290,10 @@ const StudentMarketplace = () => {
             {/* SHOPS */}
             {shops.length > 0 && (
                 <div>
-                    <h2 className="text-lg font-semibold">Nearby Shops</h2>
+                    <h2 className="text-lg font-semibold dark:text-white">Nearby Shops</h2>
                     <ul className="space-y-3 mt-2">
                         {shops.map((s, i) => (
-                            <li key={i} className="border p-3 rounded">
+                            <li key={i} className="border dark:border-gray-600 p-3 rounded bg-white dark:bg-gray-800 dark:text-white">
                                 <b>{s.name}</b>
                                 {s.distance_km && <p>{s.distance_km} km away</p>}
                                 <a

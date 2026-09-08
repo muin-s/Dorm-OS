@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
-const API_BASE = "http://localhost:5000";
 
 interface ExitRequest {
     id: number;
@@ -21,21 +20,21 @@ export default function HostelExitAdmin() {
     const [loading, setLoading] = useState(false);
 
     const getToken = () => {
-        return localStorage.getItem("access_token") || "";
+        return localStorage.getItem(`access_token`) || ``;
     };
 
     const fetchAll = async () => {
         const token = getToken();
         if (!token) {
-            console.error("No access token found");
+            console.error(`No access token found`);
             return;
         }
 
         try {
-            const res = await fetch(`${API_BASE}/api/hostel-exit`, {
+            const res = await fetch(`/api/hostel-exit`, {
                 headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": `application/json`
                 },
             });
 
@@ -43,16 +42,16 @@ export default function HostelExitAdmin() {
                 const data = await res.json();
                 setRequests(data);
             } else {
-                console.error("Failed to fetch exit requests:", res.status, await res.text());
+                console.error(`Failed to fetch exit requests:`, res.status, await res.text());
             }
         } catch (error) {
-            console.error("Error fetching exit requests:", error);
+            console.error(`Error fetching exit requests:`, error);
         }
     };
 
     useEffect(() => {
         if (!user) return;
-        if (user.role !== "admin") return;
+        if (user.role !== `admin`) return;
 
         fetchAll();
     }, [user]);
@@ -62,12 +61,12 @@ export default function HostelExitAdmin() {
         const token = getToken();
 
         if (!token) {
-            alert("Authentication token missing. Please login again.");
+            alert(`Authentication token missing. Please login again.`);
             return;
         }
 
-        const res = await fetch(`${API_BASE}/api/hostel-exit/export/pdf`, {
-            method: "GET",
+        const res = await fetch(`/api/hostel-exit/export/pdf`, {
+            method: `GET`,
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -75,32 +74,32 @@ export default function HostelExitAdmin() {
 
         if (!res.ok) {
             const err = await res.text();
-            alert("Failed to export PDF: " + err);
+            alert(`Failed to export PDF: ` + err);
             return;
         }
 
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
+        const a = document.createElement(`a`);
         a.href = url;
-        a.download = "hostel_exit_report.pdf";
+        a.download = `hostel_exit_report.pdf`;
         document.body.appendChild(a);
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
     };
 
-    const updateStatus = async (id: number, action: "approve" | "reject") => {
-        const token = localStorage.getItem("access_token");
+    const updateStatus = async (id: number, action: `approve` | `reject`) => {
+        const token = localStorage.getItem(`access_token`);
         if (!token) {
-            alert("No access token found. Please login again.");
+            alert(`No access token found. Please login again.`);
             return;
         }
 
         const res = await fetch(
-            `${API_BASE}/api/hostel-exit/${id}/${action}`,
+            `/api/hostel-exit/${id}/${action}`,
             {
-                method: "POST",
+                method: `POST`,
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -116,13 +115,13 @@ export default function HostelExitAdmin() {
     };
 
 
-    if (user?.role !== "admin") return null;
+    if (user?.role !== `admin`) return null;
 
     return (
         <div className="space-y-4">
             <div className="flex justify-end">
                 <Button onClick={exportPDF} disabled={loading}>
-                    {loading ? "Exporting..." : "Export PDF"}
+                    {loading ? `Exporting...` : `Export PDF`}
                 </Button>
             </div>
 
@@ -134,7 +133,7 @@ export default function HostelExitAdmin() {
                             <th className="p-3 border">Type</th>
                             <th className="p-3 border">Dates</th>
                             <th className="p-3 border">Risk</th>
-                            <th className="p-3 border">Fee</th>
+                            <th className="p-3 border">Refund (₹)</th>
                             <th className="p-3 border">Status</th>
                             <th className="p-3 border">Action</th>
                         </tr>
@@ -148,15 +147,15 @@ export default function HostelExitAdmin() {
                                     {r.leave_datetime} → {r.return_datetime}
                                 </td>
                                 <td className="p-3">{r.risk_level}</td>
-                                <td className="p-3">₹{r.calculated_fee}</td>
+                                <td className="p-3">₹{r.calculated_fee > 0 ? `₹${r.calculated_fee}` : "—"}</td>
                                 <td className="p-3">{r.status}</td>
                                 <td className="p-3 flex gap-2">
-                                    {r.status === "pending" && (
+                                    {r.status === `pending` && (
                                         <>
-                                            <Button size="sm" onClick={() => updateStatus(r.id, "approve")}>
+                                            <Button size="sm" onClick={() => updateStatus(r.id, `approve`)}>
                                                 Approve
                                             </Button>
-                                            <Button size="sm" variant="destructive" onClick={() => updateStatus(r.id, "reject")}>
+                                            <Button size="sm" variant="destructive" onClick={() => updateStatus(r.id, `reject`)}>
                                                 Reject
                                             </Button>
                                         </>

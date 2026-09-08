@@ -3,7 +3,8 @@ import datetime
 from dotenv import load_dotenv
 
 # Load environment variables before any other imports that might use them
-load_dotenv()
+load_dotenv(override=False)
+
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -36,7 +37,11 @@ import re
 app = Flask(__name__)
 
 # Allow requests from your local frontend running on port 8080
-CORS(app)
+CORS(
+     app,
+     resources={r"/api/*": {"origins": "*"}},
+    supports_credentials=True,
+)
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -78,7 +83,7 @@ def get_categories():
         {"id": "7", "name": "Others"},
     ])
     
-@app.route("/uploads/<path:filename>")
+@app.route("/api/uploads/<path:filename>")
 def uploaded_files(filename):
     return send_from_directory("uploads", filename)
 
@@ -166,10 +171,10 @@ def analytics():
 
     return jsonify({'totals': totals, 'series': series})
 
-@app.route('/analyze_issue', methods=['POST'])
+@app.route('/api/analyze_issue', methods=['POST'])
 def analyze_issue():
-    API_KEY = os.getenv("API_KEY")
-    ENDPOINT = "https://api.perplexity.ai/chat/completions"
+    API_KEY = os.getenv("GEMINI_API_KEY")
+    ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={API_KEY}"
 
     try:
         data = request.get_json()
@@ -187,29 +192,21 @@ def analyze_issue():
         )
 
         payload = {
-            "model": "sonar",
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.3,
-            "max_tokens": 50,
-            "return_citations": False
-        }
-
-        headers = {
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.3, "maxOutputTokens": 50}
         }
 
         try:
-            resp = requests.post(ENDPOINT, headers=headers, json=payload, timeout=15)
+            resp = requests.post(ENDPOINT, json=payload, timeout=15)
             resp.raise_for_status()
             result = resp.json()
-            content = result["choices"][0]["message"]["content"].strip()
+            content = result["candidates"][0]["content"]["parts"][0]["text"].strip()
 
             # For testing (remove this block when using real API)
         except Exception as e:
             import traceback
             traceback.print_exc()
-            return jsonify({"sentiment": "Happy", "priority": "Low"}), 500
+            return jsonify({"sentiment": "Happy", "priority": "Low"}), 200
 
         # --- CLEAN & PARSE ---
         content = content.strip()
@@ -243,7 +240,7 @@ def analyze_issue():
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({"sentiment": "Happy", "priority": "Low"}), 500
+        return jsonify({"sentiment": "Happy", "priority": "Low"}), 200
 
 if __name__ == "__main__":
     with app.app_context():
@@ -253,7 +250,7 @@ if __name__ == "__main__":
             new_admin = User(
                 full_name="Admin",
                 email="admin@hostel.com",
-                password_hash=generate_password_hash("admin123"),
+                password_hash=generate_password_hash("admin"),
                 role="admin"
             )
             db.session.add(new_admin)

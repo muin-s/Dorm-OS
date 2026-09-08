@@ -1,0 +1,78 @@
+import { Button } from '@/components/ui/button';
+import { Building2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+const Landing = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-background to-secondary flex items-center justify-center p-4">
+      <div className="max-w-4xl w-full text-center space-y-8">
+        <div className="flex justify-center mb-6">
+          <Building2 className="h-24 w-24 text-primary" />
+        </div>
+
+        {/* Title */}
+        <h1 className="text-4xl md:text-6xl font-bold text-foreground">
+          DormOS-IIITN
+        </h1>
+
+        {/* Instruction Heading */}
+        <p className="text-2xl font-bold text-foreground mt-2">
+          USE THE BELOW CREDENTIALS
+        </p>
+
+        {/* Credentials Table */}
+        <div className="overflow-x-auto flex justify-center">
+          <table className="min-w-[320px] md:min-w-[700px] border border-gray-400 rounded-lg">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border px-4 py-2 text-left">Type of Login</th>
+                <th className="border px-4 py-2 text-left">Email</th>
+                <th className="border px-4 py-2 text-left">Password</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border px-4 py-2">
+                  For Student page (PS: you could signup and create more)
+                </td>
+                <td className="border px-4 py-2">john@hostel.com</td>
+                <td className="border px-4 py-2">john</td>
+              </tr>
+              <tr>
+                <td className="border px-4 py-2">For Admin page</td>
+                <td className="border px-4 py-2">admin@hostel.com</td>
+                <td className="border px-4 py-2">admin</td>
+              </tr>
+              <tr>
+                <td className="border px-4 py-2">
+                  For repairer page (PS: after admin login you could create more)
+                </td>
+                <td className="border px-4 py-2">ron@hostel.com</td>
+                <td className="border px-4 py-2">ron</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+          <Button size="lg" onClick={() => navigate('/login')} className="text-lg px-8">
+            Login
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            onClick={() => navigate('/signup')}
+            className="text-lg px-8"
+          >
+            Sign Up
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Landing;

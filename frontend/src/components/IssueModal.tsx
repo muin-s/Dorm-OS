@@ -25,7 +25,7 @@ export const IssueModal = ({ issue, open, onOpenChange }: IssueModalProps) => {
   const fetchAnalysis = async (title: string, description: string) => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/analyze_issue", {
+      const res = await fetch("/api/analyze_issue", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, description }),

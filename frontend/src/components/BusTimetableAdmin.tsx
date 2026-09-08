@@ -11,14 +11,14 @@ const BusTimetableAdmin: React.FC = () => {
   const [newTimes, setNewTimes] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/timetable")
+    fetch("/api/timetable")
       .then((res) => res.json())
       .then(setRoutes)
       .catch(console.error);
   }, []);
 
   const handleUpdate = async (routeName: string) => {
-    const res = await fetch("http://localhost:5000/api/timetable", {
+    const res = await fetch("/api/timetable", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

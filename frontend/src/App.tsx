@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import { useEffect, useState } from "react";
 import ProfileAvatar from "@/components/ui/ProfileAvatar";
 import Header from "@/components/ui/Header";
+import Footer from "@/components/ui/Footer";
 import StudentMarket from "./pages/StudentMarket";
 import HostelExit from "./pages/HostelExit";
 import HostelExitAdmin from "./pages/HostelExitAdmin";
@@ -75,6 +76,7 @@ const App = () => {
         <AuthProvider>
           <DataProvider>
             <TooltipProvider>
+              <div className="flex flex-col min-h-screen">
               <Header />
               <Toaster />
               <Sonner />
@@ -134,6 +136,8 @@ const App = () => {
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <Footer />
+            </div>
             </TooltipProvider>
           </DataProvider>
         </AuthProvider>

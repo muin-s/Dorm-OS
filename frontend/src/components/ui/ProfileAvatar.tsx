@@ -73,7 +73,7 @@ export default function ProfileAvatar() {
     setSaving(true);
     try {
       // Use relative path so dev proxy or same-origin works reliably
-      const res = await fetch("/auth/update-profile", {
+      const res = await fetch("/api/auth/update-profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

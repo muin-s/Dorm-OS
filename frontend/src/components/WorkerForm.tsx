@@ -36,7 +36,7 @@ export const WorkerForm = ({ open, onOpenChange }: WorkerFormProps) => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/categories");
+      const res = await fetch("/api/categories");
       if (!res.ok) throw new Error("Failed to fetch categories");
       const data = await res.json();
       setCategories(data);
@@ -50,7 +50,7 @@ export const WorkerForm = ({ open, onOpenChange }: WorkerFormProps) => {
     setLoading(true);
     try {
       const token = localStorage.getItem("access_token");
-      const res = await fetch("http://localhost:5000/auth/create-worker", {
+      const res = await fetch("/api/auth/create-worker", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -33,7 +33,6 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { IssueModal } from "@/components/IssueModal";
 
-const API_BASE = "http://localhost:5000";
 
 interface Issue {
   id: number;
@@ -56,7 +55,7 @@ const RepairerDashboard = () => {
   useEffect(() => {
     const fetchMyIssues = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/my-issues`, {
+        const res = await fetch(`/api/issues?mine=true`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
@@ -83,7 +82,7 @@ const RepairerDashboard = () => {
 
   const handleStatusChange = async (issueId: number, newStatus: Issue["status"]) => {
     try {
-      const res = await fetch(`${API_BASE}/api/issues/${issueId}/status`, {
+      const res = await fetch(`/api/issues/${issueId}/status`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,7 +114,7 @@ const RepairerDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div style={{backgroundImage:"url(/hostel3.jpg)",backgroundSize:"cover",backgroundPosition:"center",backgroundAttachment:"fixed"}} className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <header className="border-b bg-white dark:bg-gray-800 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Worker Dashboard</h1>
