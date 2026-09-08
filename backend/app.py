@@ -57,6 +57,22 @@ db.init_app(app)
 Migrate(app, db)
 JWTManager(app)
 
+# Create tables and default admin on startup (works with Gunicorn/Render)
+with app.app_context():
+    db.create_all()
+    # Create default admin if not exists
+    admin = User.query.filter_by(role="admin").first()
+    if not admin:
+        new_admin = User(
+            full_name="Admin",
+            email="admin@hostel.com",
+            password_hash=generate_password_hash("admin"),
+            role="admin"
+        )
+        db.session.add(new_admin)
+        db.session.commit()
+        print("✅ Default admin created on startup")
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(workers_bp)
 app.register_blueprint(issues_bp)
